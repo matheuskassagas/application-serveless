@@ -1,5 +1,5 @@
 bucket = "tfstate-000000000000"
 key = "application-serveless/terraform.tfstate"
 region = "us-east-1"
-profile = "defalt"
+profile = "default"
 dynamodb_table = "tflock-tfstate-000000000000"

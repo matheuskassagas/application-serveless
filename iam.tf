@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "lambda-assume-role" {
 
 # # --------------- S3 Role --------------- # # 
 # # Integrafgir com S3, SNS e escrever logs no cloudwacth 
- 
+
 data "aws_iam_policy_document" "s3" { # # policy to s3
   statement {
     sid       = "AllowS3AndSNSActions" # # allow actions on s3 and SNS
@@ -61,9 +61,9 @@ resource "aws_iam_policy" "s3" { # # criando a policy utilizando o data
 }
 
 resource "aws_iam_role_policy_attachment" "s3-execute" { # # anexando a policy na role. 
-  policy_arn = aws_iam_policy.s3.arn  
+  policy_arn = aws_iam_policy.s3.arn
   role       = aws_iam_role.s3.name # # lambda sera capaz de assumir a role e execultar o que a policy permite
-} 
+}
 
 # # --------------- Dynamo Role --------------- # #
 

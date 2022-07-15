@@ -1,9 +1,9 @@
-resource "aws_cognito_user_pool" "this" {
+resource "aws_cognito_user_pool" "this0" {
   name = var.service_name
   tags = local.common_tags
 }
 
-resource "aws_cognito_user_pool_client" "this" {
+resource "aws_cognito_user_pool_client" "this1" {
   name         = var.service_name
   user_pool_id = aws_cognito_user_pool.this.id
 
@@ -15,7 +15,7 @@ resource "aws_cognito_user_pool_client" "this" {
   supported_identity_providers         = ["COGNITO"]
 }
 
-resource "aws_cognito_user_pool_domain" "this" {
+resource "aws_cognito_user_pool_domain" "this2" {
   domain       = var.service_domain
   user_pool_id = aws_cognito_user_pool.this.id
 }

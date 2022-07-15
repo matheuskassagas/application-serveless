@@ -27,6 +27,9 @@ terraform {
 }
 
 provider "aws" {
-  region = "eu-east-1"
+  region  = "eu-central-1"
+  access_key = "test"
+  secret_key = "test"
+  token      = "1c41f0e4-64d7-4c93-bd06-cc9ff1643007"
   profile = "default"
 }

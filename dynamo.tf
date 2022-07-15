@@ -1,9 +1,9 @@
 resource "aws_dynamodb_table" "this" {
-  name = var.service_name
-  hash_key = "TodoId"
-  read_capacity = 5
+  name           = var.service_name
+  hash_key       = "TodoId"
+  read_capacity  = 5
   write_capacity = 5
-  
+
   attribute {
     name = "TodoId"
     type = "S"
@@ -13,7 +13,7 @@ resource "aws_dynamodb_table" "this" {
 
 resource "aws_dinamodb_table_item" "todo" {
   table_name = aws_dynamodb_table.this.name
-  hash_key =   aws_dynamodb_table.this.hash_key
+  hash_key   = aws_dynamodb_table.this.hash_key
 
   item = <<ITEM
 {
