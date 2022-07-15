@@ -7,7 +7,7 @@ data "archive_file" "s3" {
 resource "aws_lambda_function" "s3" {
   function_name = "s3"
   handler = "index.handler"
-  role = aws_iam_role.s3.arn
+  role = aws_iam_role.s3.arn # # role, for to be able to communicate with other services from aws
   runtime = "nodejs14.x"
 
   filename = data.archive_file.s3.output_path

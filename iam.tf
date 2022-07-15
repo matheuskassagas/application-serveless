@@ -10,34 +10,35 @@ data "aws_iam_policy_document" "lambda-assume-role" {
 }
 
 # # --------------- S3 Role --------------- # # 
-
-data "aws_iam_policy_document" "s3" {
+# # Integrafgir com S3, SNS e escrever logs no cloudwacth 
+ 
+data "aws_iam_policy_document" "s3" { # # policy to s3
   statement {
-    sid       = "AllowS3AndSNSActions"
+    sid       = "AllowS3AndSNSActions" # # allow actions on s3 and SNS
     effect    = "Allow"
-    resources = ["*"]
+    resources = ["*"] # # 
 
-    actions = [
+    actions = [ # # actions " All of It "
       "s3:*",
       "sns:*",
-    ]
+    ] # # this policy say that the lambda or how use it, can execute any resource in S3 and SNS
   }
 
-  statement {
+  statement { # # This block allow lambdas can invoke lambdas
     sid       = "AllowInvokingLambdas"
     effect    = "Allow"
     resources = ["arn:aws:lambda:*:*:function:*"]
     actions   = ["lambda:InvokeFunction"]
   }
 
-  statement {
+  statement { # # This block allow lambdas can create groups
     sid       = "AllowCreatingLogGroups"
     effect    = "Allow"
     resources = ["arn:aws:logs:*:*:*"]
     actions   = ["logs:CreateLogGroup"]
   }
 
-  statement {
+  statement { # # This block allow lambdas can write logs 
     sid       = "AllowWritingLogs"
     effect    = "Allow"
     resources = ["arn:aws:logs:*:*:log-group:/aws/lambda/*:*"]
@@ -49,20 +50,20 @@ data "aws_iam_policy_document" "s3" {
   }
 }
 
-resource "aws_iam_role" "s3" {
+resource "aws_iam_role" "s3" { # # sem permicao para conversar com outro servico
   name               = "${var.service_domain}-lambda-role"
-  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
+  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json # # assume the first role
 }
 
-resource "aws_iam_policy" "s3" {
+resource "aws_iam_policy" "s3" { # # criando a policy utilizando o data
   name   = "${aws_lambda_function.s3.function_name}-lambda-execute-policy"
   policy = data.aws_iam_policy_document.s3.json
 }
 
-resource "aws_iam_role_policy_attachment" "s3-execute" {
-  policy_arn = aws_iam_policy.s3.arn
-  role       = aws_iam_role.s3.name
-}
+resource "aws_iam_role_policy_attachment" "s3-execute" { # # anexando a policy na role. 
+  policy_arn = aws_iam_policy.s3.arn  
+  role       = aws_iam_role.s3.name # # lambda sera capaz de assumir a role e execultar o que a policy permite
+} 
 
 # # --------------- Dynamo Role --------------- # #
 

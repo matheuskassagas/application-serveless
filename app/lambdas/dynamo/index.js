@@ -1,7 +1,7 @@
 'use strict'
 
 const AWS = require('aws-sdk')
-const dynamo = new AWS.DynamoDB.DocumentClient()
+const dynamo = new AWS.DynamoDB.DocumentClient() // Cliente
 
 const normalizeEvent = (event) => {
     // SNS
@@ -21,7 +21,7 @@ const normalizeEvent = (event) => {
     }
 }
 
-exports.handler = async (event) => {
+exports.handler = async (event) => { // receber da api ou sns
 
     if (process.env.DEBUG) {
         console.log(`Received event: ${JSON.stringify(event)}`)

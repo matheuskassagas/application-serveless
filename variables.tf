@@ -13,7 +13,7 @@ variable "aws_profile" {
 variable "aws_account_id" {
   type        = number
   description = ""
-  default     = 000000000000
+  default     = "000000000000"
 }
 
 variable "service_name" {
