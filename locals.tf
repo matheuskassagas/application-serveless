@@ -1,4 +1,5 @@
 locals {
+  lambdas_path = "${path.module}./app/lambdas"
 
   common_tags = {
     Project   = "TO-DO Serverless App"
