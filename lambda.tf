@@ -1,3 +1,26 @@
+resource "null_resource" "build_lambda_layer" { # # build lambda layer
+  triggers = {
+    layer_build = filemd5("${local.layers_path}/package.json") # # ouvindo o arquivo para qualquer alteracao que houver
+  } 
+  # # toda vez que houver uma alteracao ele dispara o provisioner "local-exec"
+
+  provisioner "local-exec"{
+    working_dir = local.layers_path
+    command = "npm install --production && cd ../ && zip -9 -r --quiet ${local.layer_name} *"
+  }
+}
+
+resource "aws_lambda_layer_version" "joi" {
+  layer_name = "joi-layer"
+  description = "joi: 17.3.0"
+  filename = "${local.layers_path}./${local.layer_name}"
+  runtime = ["nodejs14.x"]
+
+  depends_on = [
+    null_resource.build_lambda_layer
+  ]
+}
+
 data "archive_file" "s3" {
   type = "zip"
   source_file = "${local.lambdas_path}/s3/index.js"
@@ -12,6 +35,8 @@ resource "aws_lambda_function" "s3" {
 
   filename = data.archive_file.s3.output_path
   source_code_hash = data.archive_file.s3.output_base64sha256
+
+  layers = [aws_lambda_layer_version.joi.arn]
 
   tags = local.common_tags
 }  
