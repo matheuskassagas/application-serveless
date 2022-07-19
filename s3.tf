@@ -15,3 +15,5 @@ resource "aws_s3_bucket_notification" "lambda" {
     events = ["s3:ObjectCreated:*"] # # so e disparado o evento quando criar o objeto no S3
   }
 }
+
+# # It was necessarie create a permission on lambda

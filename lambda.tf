@@ -38,7 +38,11 @@ resource "aws_lambda_function" "s3" {
 
   layers = [aws_lambda_layer_version.joi.arn]
 
-  tags = local.common_tags
+  environment {
+    variables = {
+      TOPIC_ARN = aws_sns_topic.this.arn
+    }
+  }
 }
 
 resource "aws_lambda_permission" "s3" {
