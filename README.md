@@ -1,0 +1,1 @@
+Bucket com notificacao para que quando subir um arquivo nele seja disparado um evento e uma notificacao no lambda, colocando mensagens

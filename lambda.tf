@@ -33,12 +33,21 @@ resource "aws_lambda_function" "s3" {
   role          = aws_iam_role.s3.arn # # role, for to be able to communicate with other services from aws
   runtime       = "nodejs14.x"
 
-  filename         = data.archive_file.s3.output_path
-  source_code_hash = data.archive_file.s3.output_base64sha256
+  filename         = data.archive_file.s3.output_path # # Add code inside of lambda for execution
+  source_code_hash = data.archive_file.s3.output_base64sha256 # # code hash 
 
   layers = [aws_lambda_layer_version.joi.arn]
 
   tags = local.common_tags
+}
+
+resource "aws_lambda_permission" "s3" {
+  statement_id = "AllowExecutionFromS3Bucket"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.s3.arn
+  principal = "s3.amazonaws.com"
+  source_arn = aws_s3_bucket.todo.arn
+  
 }
 
 data "archive_file" "dynamo" {
@@ -66,4 +75,20 @@ resource "aws_lambda_function" "dynamo" {
   }
 
   tags = local.common_tags
+}
+
+resource "aws_lambda_permission" "dynamo" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.dynamo.arn
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "arn:aws:execute-api:${var.aws_region}:${var.aws_account_id}:*/*"
+}
+
+resource "aws_lambda_permission" "sns" {
+  statement_id  = "AllowExecutionFromSNS"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.dynamo.function_name
+  principal     = "sns.amazonaws.com"
+  source_arn    = aws_sns_topic.this.arn
 }
